@@ -1,5 +1,5 @@
 import click
-from flask import Flask,render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -10,10 +10,23 @@ def index():
     return render_template('index.html',dataxxx='zheshi chuancanlede')
 
 
+@app.route('/getAnswer', methods=['GET', 'POST'])
+# @app.route('/getAnswer/<question>')
+def getAnswerByQuestion():
+
+    if request.method == 'POST':
+        question=request.form.get('question')
+        print(question)
+        return 'question=== %s!hahah' % question
+    else:
+        return '不存在答案'
+
+
 # bind multiple URL for one view function
 @app.route('/hi')
 @app.route('/hello')
 def say_hello():
+    print('say_hello')
     return '<h1>Hello, Flask!</h1>'
 
 
