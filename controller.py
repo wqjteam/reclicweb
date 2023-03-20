@@ -1,6 +1,6 @@
 import click
 from flask import Flask, render_template, request
-
+from flask_cors import *
 app = Flask(__name__)
 
 
@@ -12,6 +12,7 @@ def index():
 
 @app.route('/getAnswer', methods=['GET', 'POST'])
 # @app.route('/getAnswer/<question>')
+@cross_origin()
 def getAnswerByQuestion():
 
     if request.method == 'POST':
