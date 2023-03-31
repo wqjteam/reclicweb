@@ -35,3 +35,6 @@ for k, v in state_dict.items():  # k为module.xxx.weight, v为权重
 
 # 因为后面的参数没有初始化，所以采用非强制性约束,多GPu的加载到单GPU上需要, map_location='cuda:0'
 model.load_state_dict(new_state_dict, strict=True)
+
+
+model()
