@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 from collections import OrderedDict
 
 import torch
@@ -10,6 +11,7 @@ model_name = 'bert-base-chinese'
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
+path=""
 
 '''
 实体识别部分
@@ -20,21 +22,24 @@ ner_label_id = {}
 for key in ner_id_label:
     ner_label_id[ner_id_label[key]] = key
 
-config = AutoConfig.from_pretrained(pretrained_model_name_or_path=model_name, num_labels=len(ner_label_id))
-model = BertForNerAppendBiLstmAndCrf(config)
-# 因为后面的参数没有初始化，所以采用非强制性约束
-state_dict =torch.load("")
+if len(sys.argv) >= 1:
 
-new_state_dict = OrderedDict()
-for k, v in state_dict.items():  # k为module.xxx.weight, v为权重
-    if k.startswith('module.'):
-        name = k[7:]  # 截取`module.`后面的xxx.weight
-        new_state_dict[name] = v
-    else:
-        new_state_dict[k] = v
+    config = AutoConfig.from_pretrained(pretrained_model_name_or_path=model_name, num_labels=len(ner_label_id))
+    model = BertForNerAppendBiLstmAndCrf(config)
+    # 因为后面的参数没有初始化，所以采用非强制性约束
+    state_dict =torch.load("")
 
-# 因为后面的参数没有初始化，所以采用非强制性约束,多GPu的加载到单GPU上需要, map_location='cuda:0'
-model.load_state_dict(new_state_dict, strict=True)
+    new_state_dict = OrderedDict()
+    for k, v in state_dict.items():  # k为module.xxx.weight, v为权重
+        if k.startswith('module.'):
+            name = k[7:]  # 截取`module.`后面的xxx.weight
+            new_state_dict[name] = v
+        else:
+            new_state_dict[k] = v
 
+    # 因为后面的参数没有初始化，所以采用非强制性约束,多GPu的加载到单GPU上需要, map_location='cuda:0'
+    model.load_state_dict(new_state_dict, strict=True)
 
+else:
+    model = BertForNerAppendBiLstmAndCrf.from_pretrained(pretrained_model_name_or_path=model_name)  # num_labels 测试用一下，看看
 model()
