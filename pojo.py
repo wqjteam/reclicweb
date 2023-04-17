@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-class SearchHistory(object):
+class SearchHistory():
     def __int__(self,id,mac_address,search_data,audit,insert_time,update_time):
         self.id: int = id
 
@@ -23,4 +23,20 @@ class SearchHistory(object):
 
     def get_data_segment_page(self, condition, cursor):
         pass
+
+
+class A(object):
+
+    def __init__(self, name):
+        self.name = name
+    def p(self):
+        print(self.name)
+
+f = A("lkk")
+
+f.p()
+aa=SearchHistory(1,"mac_address","search_data","audit","insert_time","update_time")
+
+print(aa)
+
 
