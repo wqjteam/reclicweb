@@ -1,6 +1,12 @@
+from datetime import datetime
+
 import click
 from flask import Flask, render_template, request
 from flask_cors import *
+
+from pojo import SearchHistory
+from service import search_data
+
 app = Flask(__name__)
 
 
@@ -16,8 +22,11 @@ def index():
 def getAnswerByQuestion():
 
     if request.method == 'POST':
+        now=datetime.now().strftime('%Y-%m-%d_%H%M%S')
         question=request.form.get('question')
-        print(question)
+        ip=request.form.get('ip')
+        insert_data=SearchHistory(mac_address=ip,search_data=question,audit=0,insert_time=now,update_time=now)
+        search_data(insert_data)
         return 'question=== %s!hahah' % question
     else:
         return '不存在答案'

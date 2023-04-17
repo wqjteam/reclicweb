@@ -1,23 +1,23 @@
 from datetime import datetime
 
 
-class SearchHistory:
-    def __int__(self):
-        self.id: int = None
+class SearchHistory(object):
+    def __int__(self,id,mac_address,search_data,audit,insert_time,update_time):
+        self.id: int = id
 
-        self.macaddress: str = None
+        self.mac_address: str = mac_address
 
-        self.search_data: str = None
+        self.search_data: str = search_data
 
-        self.audit: str = None
+        self.audit: str = audit
 
-        self.insert_time: datetime = None
+        self.insert_time: datetime = insert_time
 
-        self.update_time: datetime = None
+        self.update_time: datetime = update_time
 
     def get_insert_sql(self):
         insertsql = "insert into search_history(macaddress,search_data,audit ,insert_time,update_time) values('%s','%s','%s','%s','%s')" \
-                    % (self.macaddress, self.search_data, self.audit, self.insert_time, self.update_time)
+                    % (self.mac_address, self.search_data, self.audit, self.insert_time, self.update_time)
 
         return insertsql
 

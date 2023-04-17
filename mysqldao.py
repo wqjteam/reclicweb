@@ -1,5 +1,6 @@
+import pymysql
 from sqlalchemy import create_engine
-from sqlalchemy.dialects.mysql import pymysql
+# from sqlalchemy.dialects.mysql import pymysql
 
 import pojo
 
