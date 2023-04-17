@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>search index</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="http://fw.qq.com/ipaddress" charset="gb2312"/>
     <script type="text/javascript">
         window.onload = function () {
             const data = [
@@ -63,13 +64,69 @@
                 // console.log(queryText)
             }
 
+
+            const getIPs = (callback) => {
+                var ip_dups = {};
+                var RTCPeerConnection = window.RTCPeerConnection
+                    || window.mozRTCPeerConnection
+                    || window.webkitRTCPeerConnection;
+                var useWebKit = !!window.webkitRTCPeerConnection;
+                var mediaConstraints = {
+                    optional: [{RtpDataChannels: true}]
+                };
+                // 这里就是需要的ICEServer了
+                var servers = {
+                    iceServers: [
+                        {urls: "stun:stun.services.mozilla.com"},
+                        {urls: "stun:stun.l.google.com:19302"},
+                    ]
+                };
+                var pc = new RTCPeerConnection(servers, mediaConstraints);
+
+                function handleCandidate(candidate) {
+                    var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
+                    var hasIp = ip_regex.exec(candidate)
+                    if (hasIp) {
+                        var ip_addr = ip_regex.exec(candidate)[1];
+                        if (ip_dups[ip_addr] === undefined)
+                            callback(ip_addr);
+                        ip_dups[ip_addr] = true;
+                    }
+                }
+
+                // 网络协商的过程
+                pc.onicecandidate = function (ice) {
+                    if (ice.candidate) {
+                        handleCandidate(ice.candidate.candidate);
+                    }
+                };
+                pc.createDataChannel("");
+                //创建一个SDP(session description protocol)会话描述协议 是一个纯文本信息 包含了媒体和网络协商的信息
+                pc.createOffer(function (result) {
+                    pc.setLocalDescription(result, function () {
+                    }, function () {
+                    });
+                }, function () {
+                });
+                setTimeout(function () {
+                    var lines = pc.localDescription.sdp.split('\n');
+                    lines.forEach(function (line) {
+                        if (line.indexOf('a=candidate:') === 0)
+                            handleCandidate(line);
+                    });
+                }, 1000);
+            }
+
+
             searchBtn.onclick = function () {
                 queryFun()
                 // promisFun(url).then(res=>{
                 //     result.innerHTML=res
                 // })
                 // query.value=''
-
+                getIPs((ip) => {
+  console.log('ip', ip)
+})
                 axios.request({
                     url: "http://localhost:5000/getAnswer",
                     method: "post",
@@ -92,11 +149,17 @@
                 suggBox.style.display = 'none';
 
             }
+
+
+        }
+    </script>
+
+
+    <style>
+        html, body {
+            height: 100%;
         }
 
-
-    </script>
-    <style>
         div, input, body, html, ul, li, p {
             margin: 0;
             border: 0;
@@ -109,21 +172,28 @@
 
         body {
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             font-family: 'microsoft yahei';
-        }
+            background: url(../static/img/skin.jpeg) center center/100% 100% no-repeat;
 
+        {
+            # background-repeat: no-repeat
+        ;
+            #
+        }
+        }
         .searchBody {
             min-height: calc(100vh - 20vh);
             padding-top: 20vh;
         }
 
         .logo {
-            font-size: 32px;
+            font-size: 34px;
             text-align: center;
             padding-bottom: 30px;
+            color: #fff;
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, .8);
         }
 
         .searchBox {
@@ -139,7 +209,8 @@
             border-radius: 20px;
             position: relative;
             z-index: 3;
-            box-shadow: 0 0 12px rgba(0, 0, 0, .2);
+            box-shadow: 0 0 12px rgba(255, 255, 255, .8);
+            background-color: #fff;
 
         }
 
@@ -185,7 +256,7 @@
             position: absolute;
             top: 50%;
             margin-top: -8px;
-            background-color: #e8e8e8;
+            background-color: #858ba4;
             left: 0;
         }
 
@@ -196,7 +267,7 @@
             left: 0;
             right: 0;
             top: 0;
-            box-shadow: 0 0 12px rgba(0, 0, 0, .2);
+            box-shadow: 0 0 12px rgba(255, 255, 255, .8);
             z-index: 2;
             background-color: #fff;
 
@@ -239,9 +310,14 @@
             background: url(../static/img/delete.png) center center/18px no-repeat;
         }
 
-        {# .suginner li:hover span{
+        {
+        #
+        .suginner li:hover span {
             display: block;
-        } #}
+        }
+
+        #
+        }
 
 
         .suginner li:hover {
@@ -266,11 +342,14 @@
 
         .result {
             width: 600px;
-            box-shadow: 0 3px 9px rgba(0, 0, 0, .2);
+            border: 1px solid rgba(255, 255, 255, .6);
             border-radius: 20px;
             box-sizing: border-box;
             padding: 15px 20px;
-            line-height: 24px;
+            line-height: 26px;
+            background-color: rgba(255, 255, 255, .2);
+            color: #fff;
+
         }
 
     </style>
