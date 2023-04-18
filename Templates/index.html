@@ -16,7 +16,7 @@
 
     <script>
         function ipJson(ipJson) {
-            {#console.log('获取到的网络IP', ipJson);#}
+            // console.log('获取到的网络IP', ipJson)
             //可以把结果存在window上，方便调用
             window.ipJson = ipJson;
         }
@@ -51,36 +51,43 @@
             query.onfocus = function () {
                 queryBox.className = 'queryBox queryHover';
                 suggBox.style.display = 'block'
-                // promisFun(url).then(res=>{
-                //     let listEle=''
-                //     res.map(item=>{
-                //         listEle+=`<li><p>${item.text}</p><span>删除</span></li>`
-                //     })
-                //     // console.log(listEle)
-                //     suggList.innerHTML=listEle
-                // })
+
+                var onfocusstr = "ip=" + window.ipJson.ip
                 let listEle = ''
-                data.map(item => {
-                    listEle += `<li><p>${item.text}</p><span>删除</span></li>`
+                axios.request({
+                    url: "http://localhost:5000/getfronthistory",
+                    method: "post",
+                    data: onfocusstr
+                }).then(res => {
+
+                    res.data.map(item => {
+                        console.log(item[2])
+                        listEle += `<li><p>${item[2]}</p><span>删除</span></li>`
+                    })
+                    // var obj = JSON.parse(res.data);
+
+
+                    // console.log(listEle)
+                    suggList.innerHTML = listEle
+
                 })
+
+
+                // data.map(item => {
+                //     listEle += `<li><p>${item.text}</p><span>删除</span></li>`
+                // })
                 // console.log(listEle)
-                suggList.innerHTML = listEle
+
             }
 
 
-
-
-
             searchBtn.onclick = function () {
-                deliverdata = "question=" + query.value+"&ip="+window.ipJson.ip
+                deliverdata = "question=" + query.value + "&ip=" + window.ipJson.ip
                 // promisFun(url).then(res=>{
                 //     result.innerHTML=res
                 // })
                 // query.value=''
 
-
-                console.log(deliverdata)
-                {#console.log(IPData[0] + "，来自：" + IPData[2])#}
 
                 axios.request({
                     url: "http://localhost:5000/getAnswer",
@@ -108,7 +115,6 @@
 
         }
     </script>
-
 
 
     <style>

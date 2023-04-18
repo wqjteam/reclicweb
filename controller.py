@@ -4,8 +4,8 @@ import click
 from flask import Flask, render_template, request
 from flask_cors import *
 
-from pojo import SearchHistory
-from service import search_data
+import service
+from pojo import SearchHistoryPojo
 
 app = Flask(__name__)
 
@@ -17,19 +17,34 @@ def index():
 
 
 @app.route('/getAnswer', methods=['GET', 'POST'])
-# @app.route('/getAnswer/<question>')
 @cross_origin()
 def getAnswerByQuestion():
 
     if request.method == 'POST':
-        now=datetime.now().strftime('%Y-%m-%d_%H%M%S')
+        now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         question=request.form.get('question')
         ip=request.form.get('ip')
-        insert_data=SearchHistory(mac_address=ip,search_data=question,audit=0,insert_time=now,update_time=now)
-        search_data(insert_data)
+        insert_data=SearchHistoryPojo(mac_address=ip,search_data=question,insert_time=now,update_time=now)
+        service.search_data(insert_data)
         return 'question=== %s!hahah' % question
     else:
         return '不存在答案'
+
+
+
+@app.route('/getfronthistory', methods=['GET', 'POST'])
+@cross_origin()
+def getFronthistory():
+
+    if request.method == 'POST':
+
+        ip=request.form.get('ip')
+        insert_data=SearchHistoryPojo(mac_address=ip)
+        returnjson=service.get_front_hinstory_data(insert_data)
+        return returnjson
+    else:
+        return '不存在答案'
+
 
 
 # bind multiple URL for one view function
