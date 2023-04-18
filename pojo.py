@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class SearchHistory():
-    def __int__(self,id,mac_address,search_data,audit,insert_time,update_time):
+    def __init__(self,id,mac_address,search_data,audit,insert_time,update_time):
         self.id: int = id
 
         self.mac_address: str = mac_address
@@ -25,18 +25,6 @@ class SearchHistory():
         pass
 
 
-class A(object):
 
-    def __init__(self, name):
-        self.name = name
-    def p(self):
-        print(self.name)
-
-f = A("lkk")
-
-f.p()
-aa=SearchHistory(1,"mac_address","search_data","audit","insert_time","update_time")
-
-print(aa)
 
 
