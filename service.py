@@ -26,8 +26,8 @@ def search_data(data: pojo.SearchHistoryPojo):
 
 
     model_out=qa_model_inference.get_qa_result(ner_pass_pair_list)
-    relation_score_argmax=torch.argmax(model_out[0],dim=1)
-    relation_score_argmax
+    relation_score_argmax:torch.tensor=torch.argmax(model_out[0],dim=1)
+    relation_score_argmax.reshape(1,-1)*torch.ones_like(relation_score_argmax).reshape(-1,1)
     relation_score_softmax=torch.softmax(model_out[0],dim=1).tolist()
 
     start_position=torch.argmax(model_out[1],dim=1).tolist()
