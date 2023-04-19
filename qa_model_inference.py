@@ -45,8 +45,7 @@ model.to(device)
 def get_qa_result(question_passage_list):
         with torch.no_grad():
             encoded_dict = tokenizer.batch_encode_plus(
-                batch_text_or_text_pairs=list(
-                    zip(["春秋版画博物馆是坐落于北京的一所主要藏品为版画的博物馆。"], ["春秋版画博物馆在哪里？"])),
+                batch_text_or_text_pairs=question_passage_list,
                 # 输入文本对 # 输入文本,采用list[tuple(text,question)]的方式进行输入
                 add_special_tokens=True,  # 添加 '[CLS]' 和 '[SEP]'
                 max_length=512,  # 填充 & 截断长度
@@ -54,11 +53,15 @@ def get_qa_result(question_passage_list):
                 padding='longest',
                 return_attention_mask=True,  # 返回 attn. masks.
             )
+
             model_output = model(input_ids=torch.tensor(encoded_dict['input_ids']).to(device),
                                  attention_mask=torch.tensor(encoded_dict['attention_mask']).to(device),
                                  token_type_ids=torch.tensor(encoded_dict['token_type_ids']).to(device))
+
+
+            qa_nsp_logits=model_output.nsp_relationship_scores.to("cpu")
             qa_start_logits = model_output.qa_start_logits.to("cpu")
             qa_end_logits = model_output.qa_end_logits.to("cpu")
 
-
+            return (qa_nsp_logits,qa_start_logits,qa_end_logits)
 
