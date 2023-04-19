@@ -3,15 +3,16 @@ import sys
 from collections import OrderedDict
 
 import torch
-from transformers import AutoConfig, AutoTokenizer
+from tokenizers import Tokenizer
+from transformers import AutoConfig, AutoTokenizer, BertTokenizer
 
 from PraticeOfTransformers.CustomModelForNer import BertForNerAppendBiLstmAndCrf
 
 model_name = 'bert-base-chinese'
 
-tokenizer = AutoTokenizer.from_pretrained(model_name)
+tokenizer = BertTokenizer.from_pretrained(model_name)
 
-path=""
+path = "./model_path/ner_path/ultimate_dict_ner_epoch_1000"
 
 '''
 实体识别部分
@@ -22,12 +23,12 @@ ner_label_id = {}
 for key in ner_id_label:
     ner_label_id[ner_id_label[key]] = key
 
-if len(sys.argv) >= 1:
+if path != "":
 
     config = AutoConfig.from_pretrained(pretrained_model_name_or_path=model_name, num_labels=len(ner_label_id))
     model = BertForNerAppendBiLstmAndCrf(config)
     # 因为后面的参数没有初始化，所以采用非强制性约束
-    state_dict =torch.load("")
+    state_dict = torch.load(path)
 
     new_state_dict = OrderedDict()
     for k, v in state_dict.items():  # k为module.xxx.weight, v为权重
@@ -41,5 +42,28 @@ if len(sys.argv) >= 1:
     model.load_state_dict(new_state_dict, strict=True)
 
 else:
-    model = BertForNerAppendBiLstmAndCrf.from_pretrained(pretrained_model_name_or_path=model_name)  # num_labels 测试用一下，看看
-model()
+    model = BertForNerAppendBiLstmAndCrf.from_pretrained(
+        pretrained_model_name_or_path=model_name)  # num_labels 测试用一下，看看
+
+# 看是否用cpu或者gpu训练
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+model.to(device)
+def get_ner_result(input_question):
+    with torch.no_grad():
+        encode_dict = tokenizer.encode_plus(text=input_question,
+                                             add_special_tokens=True,
+                                             truncation=True)
+        input_ids = encode_dict['input_ids']
+        token_type_ids = encode_dict['token_type_ids']
+        # labels = encode_dict['labels']
+        _, logits = model(torch.tensor([input_ids]).to(device), token_type_ids=torch.tensor([token_type_ids]).to(device),
+                          is_test=True,
+                          labels=torch.ones_like(torch.tensor([input_ids])).to(device))
+        predict = logits.view(-1, logits.shape[2])[0].cpu().tolist()
+        print("结果输出")
+        for tp in zip(tokenizer.convert_ids_to_tokens(encode_dict['input_ids']), predict):
+            print(tp[0] + '-' + ner_id_label[tp[1]])
+
+        pass
+
+get_ner_result("大撒大撒大撒")
