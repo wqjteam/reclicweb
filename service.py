@@ -8,12 +8,12 @@ import pojo
 
 def search_data(data: pojo.SearchHistoryPojo):
     mysqldao.insert_history(data)
+    ner_result=ner_model_inference.get_ner_result(data.search_data)
     return "zhegshi fanhuishuju"
 
 
 def get_front_hinstory_data(data: pojo.SearchHistoryPojo):
     returndata= mysqldao.get_history_front_data(data)
-    ner_result=ner_model_inference.get_ner_result(data.search_data)
     returnjosnstr=json.dumps(returndata, cls=DateEncoder,ensure_ascii=False)
     return returnjosnstr
 

@@ -61,9 +61,18 @@ def get_ner_result(input_question):
                           labels=torch.ones_like(torch.tensor([input_ids])).to(device))
         predict = logits.view(-1, logits.shape[2])[0].cpu().tolist()
         print("结果输出")
-        for tp in zip(tokenizer.convert_ids_to_tokens(encode_dict['input_ids']), predict):
-            print(tp[0] + '-' + ner_id_label[tp[1]])
+        returnlist=[]
+        returnindex=-1
+        for index,tp in enumerate(zip(tokenizer.convert_ids_to_tokens(encode_dict['input_ids']), predict)):
+            print(tp[0] + '\001' + ner_id_label[tp[1]])
+            if ner_id_label[tp[1]].startswith('B'):
+                returnindex=returnindex+1
+                returnlist.append(tp[0])
+            elif ner_id_label[tp[1]].startswith('I'):
 
-        pass
+                returnlist[returnindex]=returnlist[returnindex]+tp[0]
+            else:
+                pass
+        return returnlist
 
-get_ner_result("大撒大撒大撒")
+get_ner_result("春秋版画博物馆在哪里？")
