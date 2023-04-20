@@ -62,6 +62,6 @@ def get_qa_result(question_passage_list):
             qa_nsp_logits=model_output.nsp_relationship_scores.to("cpu")
             qa_start_logits = model_output.qa_start_logits.to("cpu")
             qa_end_logits = model_output.qa_end_logits.to("cpu")
-
-            return (qa_nsp_logits,qa_start_logits,qa_end_logits)
+            returniputs=[tokenizer.convert_ids_to_tokens(input_id) for input_id in encoded_dict['input_ids']]
+            return (qa_nsp_logits,qa_start_logits,qa_end_logits,returniputs)
 

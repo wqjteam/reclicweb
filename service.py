@@ -27,12 +27,18 @@ def search_data(data: pojo.SearchHistoryPojo):
 
     model_out=qa_model_inference.get_qa_result(ner_pass_pair_list)
     relation_score_argmax:torch.tensor=torch.argmax(model_out[0],dim=1)
-    relation_score_argmax.reshape(1,-1)*torch.ones_like(relation_score_argmax).reshape(-1,1)
-    relation_score_softmax=torch.softmax(model_out[0],dim=1).tolist()
+    if torch.sum(relation_score_argmax)==0:
+        return "无答案"
+    relation_score_max_index =torch.argmax(torch.softmax(model_out[0],dim=1)[:,1],dim=0)
+    relation_score_softmax=torch.argmax(torch.softmax(model_out[0],dim=1),dim=0)
 
-    start_position=torch.argmax(model_out[1],dim=1).tolist()
-    end_position=torch.argmax(model_out[2],dim=1).tolist()
-    return "zhegshi fanhuishuju"
+    start_position=torch.argmax(model_out[1],dim=1).tolist()[relation_score_max_index]
+    end_position=torch.argmax(model_out[2],dim=1).tolist()[relation_score_max_index]
+    if start_position==end_position:
+        return "无答案"
+    hit_result=model_out[3][relation_score_max_index]
+    result=hit_result[start_position:end_position]
+    return result
 
 
 def get_front_hinstory_data(data: pojo.SearchHistoryPojo):
