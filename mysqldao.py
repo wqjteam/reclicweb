@@ -5,10 +5,10 @@ from sqlalchemy import create_engine
 import pojo
 
 conn = pymysql.Connect(
-    host='2234p94b30.imdo.co',
-    port=54833,
+    host='47.120.39.188',
+    port=3306,
     user='root',
-    passwd='123456',
+    passwd='qwertyuiop123456',
     db='relic_data',
     charset='utf8'
 )
