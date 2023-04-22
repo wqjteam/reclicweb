@@ -60,7 +60,7 @@ def get_ner_result(input_question):
                           is_test=True,
                           labels=torch.ones_like(torch.tensor([input_ids])).to(device))
         predict = logits.view(-1, logits.shape[2])[0].cpu().tolist()
-        print("结果输出")
+        # print("结果输出")
         returnlist=[]
         returnindex=-1
         for index,tp in enumerate(zip(tokenizer.convert_ids_to_tokens(encode_dict['input_ids']), predict)):

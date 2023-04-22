@@ -25,8 +25,8 @@ def getAnswerByQuestion():
         question=request.form.get('question')
         ip=request.form.get('ip')
         insert_data=SearchHistoryPojo(mac_address=ip,search_data=question,insert_time=now,update_time=now)
-        service.search_data(insert_data)
-        return 'question=== %s!hahah' % question
+        qa_result=service.search_data(insert_data)
+        return qa_result
     else:
         return '不存在答案'
 
