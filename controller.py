@@ -46,6 +46,20 @@ def getFronthistory():
         return '不存在答案'
 
 
+@app.route('/tologin', methods=['GET', 'POST'])
+@cross_origin()
+def tologin():
+
+    if request.method == 'POST':
+        now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        question=request.form.get('question')
+        ip=request.form.get('ip')
+        insert_data=SearchHistoryPojo(mac_address=ip,search_data=question,insert_time=now,update_time=now)
+        qa_result=service.search_data(insert_data)
+        return qa_result
+    else:
+        return render_template('backwardlogin.html', dataxxx='zheshi chuancanlede')
+
 
 # bind multiple URL for one view function
 @app.route('/hi')

@@ -12,6 +12,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>search index</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
@@ -317,7 +325,13 @@
     </style>
 </head>
 <body>
+    <ul style="position:absolute;top:20px;right:20px">
+        <li>
+            <button class="btn btn-success pull-right"><a href="{{ url_for('login') }}">后台管理</a></button>
+        </li>
+    </ul>
 <div class="searchBody">
+
     <div class="logo">基于机器阅读理解的文化遗产问答系统</div>
     <form
             @submit=""
@@ -343,8 +357,7 @@
             </div>
         </div>
     </form>
-    <div class="result" id="result">
-        2022年，爱育华医院成为北京市基本医疗保险定点医疗机构（医保编码31159010）北京爱育华医院位于北京经济技术开发区（以下简称经开区），成立于2014年，隶属于首都医疗集团，医院占地3.8万平米、建筑面积7.3万平米，目前开放床位200张，是一家集医疗、教学、科研、预防为一体的三级医院
+    <div class="result" id="result" style="display : hidden">
     </div>
 
 </div>
