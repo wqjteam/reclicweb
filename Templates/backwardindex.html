@@ -1,58 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <title>登录</title>
-    <!-- 引入 jquery、Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>管理后台</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+
+    <style type="text/css">
+        .footer {
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            margin-top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /*position: absolute;*/
+            z-index: 10;
+            background-color: #343a40;
+        }
+        .footer a{
+            font-family:  Georgia, "Times New Roman", Times, serif;;
+            color: #fff;
+        }
+
+        .navbar-nav{
+            width: 300px;
+            float: left !important;
+            display: block !important;
+        }
+        .nav-item{
+            padding-left: 20px;
+            float: left !important;
+        }
+
+        .menua{
+            font-size: 1.2em;
+        }
+
+        .menua:hover{
+            background: #fff;
+        }
+    </style>
 </head>
 
-
 <body>
-<br>
-<!-- 标题 -->
-<div >
-    <h2 style="font-weight: bold;">文化遗产后台</h2>
-</div>
-<br>
+<!--顶部导航栏部分-->
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">文化遗产后台</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <!--<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="#">当前用户：<span class="badge" >admin</span></a>
+        </li>
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="@{/logout}">退出</a>
+        </li>
+    </ul>
+</nav>
+
 
 <div class="container-fluid">
     <div class="row">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="aduitpassage">文本审核</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="aduithistory">记录审核</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link " href="tab3.html">Other</a>
-            </li>
-        </ul>
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="sidebar-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active menua" href="aduitpassage"  target="mainFrame">
+                            <span data-feather="home"></span>
+                            文本审核 <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+                                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link  menua" href="aduithistory"  target="mainFrame">
+                            <span data-feather="home"></span>
+                            记录审核 <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- 中间主体内容部分 -->
+        <main class="main col-md-9 ml-sm-auto col-lg-10 px-md-4">
+            <iframe src="user.html" src="@{/user}" id="mainFrame" name="mainFrame" width="100%" height="900px"
+                    frameBorder="0"></iframe>
+        </main>
     </div>
 </div>
-<br>
 
-<div class="row">
-    <div class="col-md-12 bg-success ">
-        <iframe id="navFrame" width="100%" height="auto" scrolling="no" frameborder="10" src="aduitpassage"></iframe>
-    </div>
+
+<!-- 底部页脚部分 -->
+<div class="footer">
+    <p class="text-center">
+        <a href="http://www.luohanye.com/" target="_blank">www.****************************.com</a>
+    </p>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $("a").click(function (e) {
-            if ($(this).attr("href").length) {
-                e.preventDefault();
-                $(this).tab('show');
-                $("#navFrame").attr("src", $(this).attr("href"));
-            }
-        })
-    });
-</script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
 </body>
 
 </html>

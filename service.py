@@ -1,3 +1,4 @@
+import math
 from datetime import datetime
 import json
 
@@ -59,9 +60,10 @@ def get_backward_history_data(mac_address, search_data, index, rows=10):
     amount = mysqldao.get_history_backward_amount(mac_address, search_data)
     data = mysqldao.get_history_backward_data(mac_address=mac_address, search_data=search_data, index=index, rows=rows)
     print(data)
-    returndict = {
-        "pages": amount / rows,
+    returndict = {"data": {
+        "pages": math.ceil(amount / rows),
         "records": data
+    }, 'status': 0
     }
     returnjosnstr = json.dumps(returndict, cls=DateEncoder, ensure_ascii=False)
     return returnjosnstr
@@ -80,12 +82,12 @@ class DateEncoder(json.JSONEncoder):
         if isinstance(obj, datetime):
             return obj.strftime("%Y-%m-%d %H:%M:%S")
         elif isinstance(obj, pojo.SearchHistoryPojo):
-            return {'id': object.id, 'mac_address': object.mac_address, 'search_data': object.search_data,
-                    'audit': object.audit, 'insert_time': object.insert_time.strftime("%Y-%m-%d %H:%M:%S"),
-                    'update_time': object.update_time.strftime("%Y-%m-%d %H:%M:%S")}
+            return {'id': obj.id, 'mac_address': obj.mac_address, 'search_data': obj.search_data,
+                    'audit': obj.audit, 'insert_time': obj.insert_time.strftime("%Y-%m-%d %H:%M:%S"),
+                    'update_time': obj.update_time.strftime("%Y-%m-%d %H:%M:%S")}
         elif isinstance(obj, pojo.PassageAudit):
-            return {'id': object.id, 'es_id': object.es_id, 'audit': object.audit,
-                    'create_time': object.create_time.strftime("%Y-%m-%d %H:%M:%S"),
-                    'update_time': object.update_time.strftime("%Y-%m-%d %H:%M:%S")}
+            return {'id': obj.id, 'es_id': obj.es_id, 'audit': obj.audit,
+                    'create_time': obj.create_time.strftime("%Y-%m-%d %H:%M:%S"),
+                    'update_time': obj.update_time.strftime("%Y-%m-%d %H:%M:%S")}
         else:
             return json.JSONEncoder.default(self, obj)

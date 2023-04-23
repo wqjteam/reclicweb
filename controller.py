@@ -61,8 +61,8 @@ def searchBackwardHistory():
     pageNo = request.form.get('pageNo')
     ip = request.form.get('ip')
 
-
-    return service.get_backward_history_data(mac_address=ip,search_data=search_data,index=pageNo)
+    data=service.get_backward_history_data(mac_address=ip,search_data=search_data,index=pageNo)
+    return data
 
 
 
