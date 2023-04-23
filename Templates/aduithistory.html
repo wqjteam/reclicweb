@@ -7,7 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>历史记录审核</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
-
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap-paginator.js"></script>
+    <script src="../static/js/util.js"></script>
     <script>
         function ipJson(ipJson) {
             // console.log('获取到的网络IP', ipJson)
@@ -158,10 +161,7 @@
     </div>
     <!-- /.modal -->
 </div>
-<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
-<script th:src="@{/js/bootstrap-paginator.js}"></script>
-<script src="../js/util.js" th:src="@{/js/util.js}"></script>
+
 
 <script type="text/javascript">
     var ctx = $("#ctx").val();
@@ -196,24 +196,25 @@
                 data: {
                     "username": $("#username").val(),
                     "pageNo": pageNo,
-                    "ip":window.ipJson.ip
+                    "ip": window.ipJson.ip
                 },
                 dataType: "json",
                 success: function (response) {
                     dataRow = "";
                     if (response.data.records.length > 0) {
                         $.each(response.data.records, function (i, r) {
+                            console.log(r)
                             dataRow += '<tr>'
                                 + '<td>'
-                                + r.username
+                                + r.mac_address
                                 + '</td>'
                                 + '<td>'
-                                + r.email
+                                + r.search_data
                                 + '</td><td>'
                                 + r.truename + '</td>'
                             ;
 
-                            dataRow += '<td>' + new Date(r.createTime).Format("yyyy-MM-dd hh:mm:ss") + '</td><td><a href="javascript:remove(' + r.id + ')" style="color: #CA0C16;">删除' +
+                            dataRow += '<td>' + r.insert_time + '</td><td><a href="javascript:remove(' + r.id + ')" style="color: #CA0C16;">删除' +
                                 '</a>&nbsp;&nbsp;<a href="javascript:edit(' + r.id + ')">编辑</a></td></tr>';
                         });
                     }
@@ -221,8 +222,8 @@
                     // console.log(dataRow);
                     $("#dataTable tbody").empty();
                     $("#dataTable tbody").append(dataRow);
-                    // 分页按钮
-                    var element = $('#pageButton');
+
+
                     var options = {
                         bootstrapMajorVersion: 4,
                         currentPage: pageNo, // 当前页数
@@ -247,8 +248,8 @@
                             getPage(page);
                         }
                     };
-
-                    element.bootstrapPaginator(options);
+                    // 分页按钮
+                    $('#pageButton').bootstrapPaginator(options);
                 }
             }
         )
