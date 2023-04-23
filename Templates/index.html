@@ -107,7 +107,8 @@
                     console.log(data)
                     suggBox.style.display = 'none';
                     result.innerHTML = data
-                    query.value = ''
+                    result.hidden=false
+                    // query.value = ''
                 })
             }
 
@@ -357,7 +358,7 @@
             </div>
         </div>
     </form>
-    <div class="result" id="result" style="display : hidden">
+    <div class="result" id="result" hidden>
     </div>
 
 </div>

@@ -21,9 +21,9 @@ def insert_history(search_data: pojo.SearchHistoryPojo):
     cursor = conn.cursor()
     sql_insert = search_data.get_insert_sql()
     cursor.execute(sql_insert)
+    cursor.close()
     conn.commit()
     conn.close()
-    cursor.close()
 
 
 def get_history_front_data(search_data: pojo.SearchHistoryPojo):
@@ -34,6 +34,7 @@ def get_history_front_data(search_data: pojo.SearchHistoryPojo):
     result = cursor.fetchall()
     return_data = [list(a) for a in result]
     cursor.close()
+    conn.close()
     return return_data
 
 
@@ -46,3 +47,16 @@ def get_history_backward_data(search_data: pojo.SearchHistoryPojo):
     for a in result:
         print(a)
     cursor.close()
+    conn.close()
+    return ""
+
+def login_backward(admin:pojo.AdminPojo):
+    conn.ping(reconnect=True)
+    cursor = conn.cursor()
+    sql_login = admin.get_login_sql()
+    cursor.execute(sql_login)
+    result = cursor.fetchall()
+    return_data = [list(a) for a in result]
+    cursor.close()
+    conn.close()
+    return return_data

@@ -60,6 +60,14 @@ def get_backward_hinstory_data(mac_address, index, rows):
     return "zhegshi fanhuishuju"
 
 
+def get_backward_login(data:pojo.AdminPojo):
+    result=mysqldao.login_backward(data)
+    if len(result)==0:
+        return False
+    else:
+        return True
+
+
 class DateEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
