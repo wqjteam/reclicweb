@@ -61,19 +61,17 @@ class SearchHistoryPojo(object):
                 selectsql = selectsql + " and  audit='0' "
 
         if pagerows is not None and pageindex is not None:
-            selectsql = selectsql + " limit %d,%d" % ((int(pageindex) - 1) * pagerows, int(pageindex) * pagerows)
+            selectsql = selectsql + " limit %d,%d" % ((int(pageindex) - 1) * pagerows, pagerows)
         return selectsql
 
-    def audit_history_sql(self, history_id, audit_status=0):
-        update_password_sql = "update relic_data.search_history set audit='%s' where id='%d'" % (
-            audit_status, history_id)
+    def get_audit_history_sql(self, history_id, update_time, audit_status=0):
+        update_password_sql = "update relic_data.search_history set audit='%s',update_time='%s' where id='%d'" % (
+            audit_status, update_time, int(history_id))
         return update_password_sql
 
 
-
-
 class AdminPojo():
-    def __init__(self, id=0, username=None, password=None, work_no=None, create_time=None, update_time=None):
+    def __init__(self, id=0, username=None, password=None, work_no=None, status=1, create_time=None, update_time=None):
         self.id: int = id
 
         self.username: str = username
@@ -82,6 +80,7 @@ class AdminPojo():
 
         self.work_no: str = work_no
 
+        self.status: str = status
         self.create_time: datetime = create_time
 
         self.update_time: datetime = update_time
@@ -92,8 +91,8 @@ class AdminPojo():
         return insert_pre_sql
 
     def get_register_sql(self):
-        insertsql = "insert into relic_data.admin(username,password,work_no ,create_time,update_time) values('%s','%s','%s','%s','%s')" \
-                    % (self.username, self.password, self.work_no, self.create_time, self.update_time)
+        insertsql = "insert into relic_data.admin(username,password,work_no,status ,create_time,update_time) values('%s','%s','%s','%s','%s','%s')" \
+                    % (self.username, self.password, self.work_no, self.status, self.create_time, self.update_time)
 
         return insertsql
 
@@ -105,6 +104,11 @@ class AdminPojo():
     def get_update_password_sql(self):
         update_password_sql = "update relic_data.admin set password='%s' where work_no='%s'" % (
             self.password, self.work_no)
+        return update_password_sql
+
+    def get_update_audit_sql(self, id, status):
+        update_password_sql = "update relic_data.admin set status='%s' where id=%d" % (
+            status, id)
         return update_password_sql
 
     def get_login_sql(self):
@@ -131,4 +135,3 @@ class PassageAudit(object):
         )
 
         return insert_sql
-

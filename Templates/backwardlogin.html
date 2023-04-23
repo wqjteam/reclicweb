@@ -26,13 +26,16 @@
                     data: onclickdata
                 }).then(res => {
                     console.log(res.data)
-                    if (res.data == "登陆成功") {
+                    if (res.data.startsWith( "登陆成功")) {
                         $('#login-success-alert-success').addClass("show");
                         window.setTimeout(function () {
                             $("#login-success-alert-success").removeClass("show");
                         }, 1000);
-                        console.log('执行到这')
-                        window.location.href = "backwardindex";
+                        splitarray=res.data.split('||')
+
+                        var url="backwardindex?id="+splitarray[1]+"&username="+splitarray[2]
+
+                        window.location.href = url;
                     } else {
                         console.log($('login-fail-alert-danger'))
                         $('#login-fail-alert-danger').addClass("show");

@@ -46,12 +46,11 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
     loginData = AdminPojo(username=username, password=password)
-
-    if service.get_backward_login(loginData):
-        return "登陆成功"
+    id = service.get_backward_login(loginData)
+    if id >= 0:
+        return "登陆成功||" + str(id) + "||" + username
     else:
         return "账号或者密码有误"
-
 
 
 @app.route('/searchBackwardHistory', methods=['GET', 'POST'])
@@ -61,46 +60,19 @@ def searchBackwardHistory():
     pageNo = request.form.get('pageNo')
     ip = request.form.get('ip')
 
-    data=service.get_backward_history_data(mac_address=ip,search_data=search_data,index=pageNo)
+    data = service.get_backward_history_data(mac_address=ip, search_data=search_data, index=pageNo)
     return data
 
 
+@app.route('/searchupdate', methods=['GET', 'POST'])
+@cross_origin()
+def searchupdate():
+    id = request.form.get('id')
+    audit = request.form.get('audit')
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    data = service.update_history_data(id, now, audit)
+    return data
 
 
 @app.route('/')
@@ -119,19 +91,51 @@ def tologinback():
 @app.route('/backwardindex', methods=['GET', 'POST'])
 @cross_origin()
 def backwardindex():
-    return render_template('backwardindex.html')
+    username = request.args.get('username')
+    id = request.args.get('id')
+    if username is None or id is None:
+        return render_template('backwardlogin.html')
+    else:
+        return render_template('backwardindex.html', username=username, id=id)
 
 
 @app.route('/aduithistory', methods=['GET', 'POST'])
 @cross_origin()
 def aduithistory():
-    return render_template('aduithistory.html')
+    username = request.args.get('username')
+    id = request.args.get('id')
+    if username is None or id is None:
+        return render_template('backwardlogin.html')
+    else:
+        return render_template('aduithistory.html')
 
 
 @app.route('/aduitpassage', methods=['GET', 'POST'])
 @cross_origin()
 def aduitpassage():
-    return render_template('aduitpassage.html')
+    username = request.args.get('username')
+    id = request.args.get('id')
+    if username is None or id is None:
+        return render_template('backwardlogin.html')
+    else:
+        return render_template('aduitpassage.html')
+
+
+@app.route('/peoplemanage', methods=['GET', 'POST'])
+@cross_origin()
+def peoplemanage():
+    username = request.args.get('username')
+    id = request.args.get('id')
+    if username is None or id is None:
+        return render_template('backwardlogin.html')
+    else:
+        return render_template('peoplemanage.html')
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+@cross_origin()
+def logout():
+    return render_template('backwardlogin.html')
 
 
 # bind multiple URL for one view function

@@ -56,6 +56,18 @@ def get_front_history_data(data: pojo.SearchHistoryPojo):
     return returnjosnstr
 
 
+def update_history_data(id,update_time, aduit):
+    returndata = mysqldao.update_history(id,update_time, aduit)
+    returndatastr = {
+        'status': 0,
+        "data": {}
+    }
+    if returndata <= 0:
+        returndatastr['status'] = -1
+
+    return json.dumps(returndatastr)
+
+
 def get_backward_history_data(mac_address, search_data, index, rows=10):
     amount = mysqldao.get_history_backward_amount(mac_address, search_data)
     data = mysqldao.get_history_backward_data(mac_address=mac_address, search_data=search_data, index=index, rows=rows)
@@ -72,9 +84,9 @@ def get_backward_history_data(mac_address, search_data, index, rows=10):
 def get_backward_login(data: pojo.AdminPojo):
     result = mysqldao.login_backward(data)
     if len(result) == 0:
-        return False
+        return -1
     else:
-        return True
+        return result[0][0]
 
 
 class DateEncoder(json.JSONEncoder):

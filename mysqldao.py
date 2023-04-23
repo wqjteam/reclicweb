@@ -75,3 +75,15 @@ def login_backward(admin: pojo.AdminPojo):
     cursor.close()
     conn.close()
     return return_data
+
+
+def update_history(id, update_time, audit):
+    conn.ping(reconnect=True)
+    cursor = conn.cursor()
+    search_data = pojo.SearchHistoryPojo()
+    sql = search_data.get_audit_history_sql(history_id=id, update_time=update_time, audit_status=audit)
+    result = cursor.execute(sql)
+    cursor.close()
+    conn.commit()
+    conn.close()
+    return result
