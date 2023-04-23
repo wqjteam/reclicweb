@@ -1,7 +1,8 @@
+import json
 from datetime import datetime
 
 
-class SearchHistoryPojo():
+class SearchHistoryPojo(object):
     def __init__(self, id=0, mac_address=None, search_data=None, audit="0", insert_time=None, update_time=None):
         self.id: int = id
 
@@ -16,7 +17,7 @@ class SearchHistoryPojo():
         self.update_time: datetime = update_time
 
     def get_insert_sql(self):
-        insertsql = "insert into relic_data.search_history(macaddress,search_data,audit ,insert_time,update_time) values('%s','%s','%s','%s','%s')" \
+        insertsql = "insert into relic_data.search_history(mac_address,search_data,audit ,insert_time,update_time) values('%s','%s','%s','%s','%s')" \
                     % (self.mac_address, self.search_data, self.audit, self.insert_time, self.update_time)
 
         return insertsql
@@ -32,11 +33,19 @@ class SearchHistoryPojo():
         return self.get_data_segment_page(mac_address=mac_address, search_data=search_data, audit=0, pagerows=rows,
                                           pageindex=index)
 
+    def get_backword_history_amount(self, mac_address=None, search_data=None):
+        backword_history_amount_sql = "select count(1) from relic_data.search_history where 1=1 "
+        if mac_address is not None:
+            backword_history_amount_sql = backword_history_amount_sql + " and  mac_address='" + mac_address + "'"
+        if search_data is not None and search_data != "":
+            backword_history_amount_sql = backword_history_amount_sql + " and  search_data  like'%" + search_data + "%'"
+        return backword_history_amount_sql
+
     def get_data_segment_page(self, mac_address=None, search_data=None, audit=None, pagerows: int = None,
                               pageindex: int = None):
-        selectsql = "select id,macaddress,search_data,audit,insert_time,update_time from  relic_data.search_history where 1=1"
+        selectsql = "select id,mac_address,search_data,audit,insert_time,update_time from  relic_data.search_history where 1=1"
         if mac_address is not None:
-            selectsql = selectsql + " and   macaddress='" + mac_address + "'"
+            selectsql = selectsql + " and   mac_address='" + mac_address + "'"
 
         if search_data is not None:
             selectsql = selectsql + " and   search_data  like'%" + search_data + "%'"
@@ -49,16 +58,18 @@ class SearchHistoryPojo():
                 selectsql = selectsql + " and (audit='0' or audit='1' ) "
             else:
                 # 后端查询
-                selectsql = selectsql + " and  audit='0')"
+                selectsql = selectsql + " and  audit='0' "
 
         if pagerows is not None and pageindex is not None:
-            selectsql = selectsql + " limit %d,%d" % ((pageindex - 1) * pagerows, pageindex * pagerows)
+            selectsql = selectsql + " limit %d,%d" % ((int(pageindex) - 1) * pagerows, int(pageindex) * pagerows)
         return selectsql
 
     def audit_history_sql(self, history_id, audit_status=0):
         update_password_sql = "update relic_data.search_history set audit='%s' where id='%d'" % (
             audit_status, history_id)
         return update_password_sql
+
+
 
 
 class AdminPojo():
@@ -102,7 +113,7 @@ class AdminPojo():
         return login_sql
 
 
-class PassageAudit():
+class PassageAudit(object):
     def __init__(self, id=0, es_id=None, audit=0, create_time=None, update_time=None):
         self.id: int = id
 
@@ -120,3 +131,4 @@ class PassageAudit():
         )
 
         return insert_sql
+

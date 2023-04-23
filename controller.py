@@ -34,7 +34,7 @@ def getFronthistory():
 
         ip = request.form.get('ip')
         insert_data = SearchHistoryPojo(mac_address=ip)
-        returnjson = service.get_front_hinstory_data(insert_data)
+        returnjson = service.get_front_history_data(insert_data)
         return returnjson
     else:
         return '不存在答案'
@@ -51,6 +51,56 @@ def login():
         return "登陆成功"
     else:
         return "账号或者密码有误"
+
+
+
+@app.route('/searchBackwardHistory', methods=['GET', 'POST'])
+@cross_origin()
+def searchBackwardHistory():
+    search_data = request.form.get('username')
+    pageNo = request.form.get('pageNo')
+    ip = request.form.get('ip')
+
+
+    return service.get_backward_history_data(mac_address=ip,search_data=search_data,index=pageNo)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route('/')

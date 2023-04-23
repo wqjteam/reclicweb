@@ -8,6 +8,14 @@
     <title>历史记录审核</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
 
+    <script>
+        function ipJson(ipJson) {
+            // console.log('获取到的网络IP', ipJson)
+            //可以把结果存在window上，方便调用
+            window.ipJson = ipJson;
+        }
+    </script>
+    <script src="//whois.pconline.com.cn/ipJson.jsp?callback=ipJson" type="text/javascript"></script>
     <style type="text/css">
         .container {
             padding: 20px;
@@ -33,18 +41,18 @@
             border-radius: 4px;
         }
 
-        .pagination>li:last-child>a, .pagination>li:last-child>span {
+        .pagination > li:last-child > a, .pagination > li:last-child > span {
             border-top-right-radius: 4px;
             border-bottom-right-radius: 4px;
         }
 
-        .pagination>li:first-child>a, .pagination>li:first-child>span {
+        .pagination > li:first-child > a, .pagination > li:first-child > span {
             margin-left: 0;
             border-top-left-radius: 4px;
             border-bottom-left-radius: 4px;
         }
 
-        .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+        .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
             z-index: 3;
             color: #fff;
             cursor: default;
@@ -52,7 +60,7 @@
             border-color: #337ab7;
         }
 
-        .pagination>li>a, .pagination>li>span {
+        .pagination > li > a, .pagination > li > span {
             position: relative;
             float: left;
             padding: 6px 12px;
@@ -183,11 +191,12 @@
     function getPage(pageNo) {
         var dataRow = "";
         $.ajax({
-                url: ctx + "/user/list",
+                url: ctx + "searchBackwardHistory",
                 type: "post",
                 data: {
                     "username": $("#username").val(),
-                    "pageNo": pageNo
+                    "pageNo": pageNo,
+                    "ip":window.ipJson.ip
                 },
                 dataType: "json",
                 success: function (response) {
@@ -296,7 +305,7 @@
         var email = $("#m_email").val();
         var truename = $("#m_truename").val();
 
-        var param = {"id": id, username: username, password:password, email: email, truename: truename};
+        var param = {"id": id, username: username, password: password, email: email, truename: truename};
 
         $.ajax({
             url: ctx + "/user/modify",
