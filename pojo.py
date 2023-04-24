@@ -115,10 +115,10 @@ class AdminPojo():
             now, self.id)
         return update_password_sql
 
-    def get_update_audit_sql(self, id, status):
+    def get_update_audit_sql(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         update_password_sql = "update relic_data.admin set status='%s',update_time='%s'   where id=%d" % (
-            status, now, id)
+            self.status, now, int(self.id))
         return update_password_sql
 
     def get_login_sql(self):

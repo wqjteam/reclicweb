@@ -96,7 +96,7 @@ def create_admin(username, password, work_no):
     admin = pojo.AdminPojo(username=username, password=password, work_no=work_no, status=-1, create_time=now,
                            update_time=now)
     prejudge = mysqldao.create_admin_pre(admin)
-    if (len(prejudge) > 0):
+    if (prejudge > 0):
         returndict = {"data": {}, 'status': -1}
     else:
 
@@ -174,9 +174,12 @@ def get_passage_audit_page(blurcontent: str, pageindex: int = 1, pagerows: int =
             pad.audit = passageaudit.audit
             pad.create_time = passageaudit.create_time
             pad.update_time = passageaudit.update_time
+        else:
+            pad.create_time = datetime.now()
+            pad.update_time = datetime.now()
 
     returndict = {"data": {
-        "pages": math.ceil(passage_page_amount / pagerows),
+        "pages": math.ceil(passage_page_amount['count'] / pagerows),
         "records": pads
     }, 'status': 0
     }
@@ -187,7 +190,7 @@ def get_passage_audit_page(blurcontent: str, pageindex: int = 1, pagerows: int =
 
 def insert_update_audit_passage(dto: pojo.PassageAudit):
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    if dto.id == 0:
+    if dto.id == 0 or dto.id == '0':
         # 则是插入
         pa = pojo.PassageAudit(es_id=dto.es_id, audit=dto.audit, create_time=now, update_time=now)
         result = mysqldao.insert_passage(pa)
@@ -216,6 +219,10 @@ class DateEncoder(json.JSONEncoder):
                     'update_time': obj.update_time.strftime("%Y-%m-%d %H:%M:%S")}
         elif isinstance(obj, pojo.PassageAuditDto):
             return {'id': obj.id, 'es_id': obj.es_id, 'es_data': obj.es_data, 'audit': obj.audit,
+                    'create_time': obj.create_time.strftime("%Y-%m-%d %H:%M:%S"),
+                    'update_time': obj.update_time.strftime("%Y-%m-%d %H:%M:%S")}
+        elif isinstance(obj, pojo.AdminPojo):
+            return {'id': obj.id, 'username': obj.username, 'password': obj.password, 'work_no': obj.work_no,'status': obj.status,
                     'create_time': obj.create_time.strftime("%Y-%m-%d %H:%M:%S"),
                     'update_time': obj.update_time.strftime("%Y-%m-%d %H:%M:%S")}
         else:

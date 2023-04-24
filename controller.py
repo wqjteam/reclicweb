@@ -56,7 +56,7 @@ def adminpage():
 def adminresetpassword():
     id = request.form.get('id')
     password = request.form.get('password')
-    return service.update_admin_password(id=0)
+    return service.update_admin_password(id=id)
 
 
 @app.route('/adminaudit', methods=['GET', 'POST'])
@@ -70,9 +70,10 @@ def adminaudit():
 @app.route('/createadmin', methods=['GET', 'POST'])
 @cross_origin()
 def createadmin():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    work_no = request.form.get('work_no')
+    jsondata = request.json
+    username = jsondata.get('username')
+    password = jsondata.get('password')
+    work_no = jsondata.get('work_no')
 
     return service.create_admin(username, password, work_no)
 
@@ -85,10 +86,10 @@ def createadmin():
 @app.route('/searchBackwardpassage', methods=['GET', 'POST'])
 @cross_origin()
 def searchBackwardpassage():
-    search_data = request.form.get('username')
+    search_data = request.form.get('passage_content')
     pageNo = request.form.get('pageNo')
 
-    data = service.get_passage_audit_page(blurcontent=search_data, index=pageNo)
+    data = service.get_passage_audit_page(blurcontent=search_data, pageindex=int(pageNo))
     return data
 
 
@@ -100,10 +101,9 @@ def passageaudit():
         id = request.form.get('id')
         es_id = request.form.get('es_id')
         audit = request.form.get('audit')
-        create_time = request.form.get('create_time')
-        update_time = request.form.get('update_time')
-        insert_data = pojo.PassageAudit(id=id, es_id=es_id, audit=audit, create_time=create_time,
-                                        update_time=update_time)
+        # create_time = request.form.get('create_time')
+        # update_time = request.form.get('update_time')
+        insert_data = pojo.PassageAudit(id=id, es_id=es_id, audit=audit)
         returnjson = service.insert_update_audit_passage(insert_data)
         return returnjson
     else:

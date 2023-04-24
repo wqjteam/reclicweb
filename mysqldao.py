@@ -94,7 +94,7 @@ def create_admin_pre(admin:pojo.AdminPojo):
     return_data = [a for a in result]
     cursor.close()
     conn.close()
-    return return_data
+    return return_data[0][0]
 
 
 
@@ -105,6 +105,7 @@ def create_admin(admin:pojo.AdminPojo):
     cursor.execute(sql)
     result = cursor.fetchall()
     return_data = [a for a in result]
+    conn.commit()
     cursor.close()
     conn.close()
     return return_data
@@ -142,6 +143,7 @@ def update_admin(admin: pojo.AdminPojo):
     cursor.execute(sql)
     result = cursor.fetchall()
     return_data = [list(a) for a in result]
+    conn.commit()
     cursor.close()
     conn.close()
     return return_data
@@ -153,6 +155,7 @@ def update_admin_audit(admin: pojo.AdminPojo):
     cursor.execute(sql)
     result = cursor.fetchall()
     return_data = [list(a) for a in result]
+    conn.commit()
     cursor.close()
     conn.close()
     return return_data
@@ -165,6 +168,7 @@ def update_admin_password(admin: pojo.AdminPojo):
     cursor.execute(sql)
     result = cursor.fetchall()
     return_data = [list(a) for a in result]
+    conn.commit()
     cursor.close()
     conn.close()
     return return_data
@@ -172,7 +176,7 @@ def update_admin_password(admin: pojo.AdminPojo):
 def get_admin_data_segment_page(work_no=None, pageindex: int = 1, pagerows: int = 10):
     conn.ping(reconnect=True)
     cursor = conn.cursor()
-    admin = pojo.AdminPojo
+    admin = pojo.AdminPojo()
     sql = admin.get_data_segment_page(work_no=work_no, pageindex=pageindex, pagerows=pagerows)
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -185,7 +189,7 @@ def get_admin_data_segment_page(work_no=None, pageindex: int = 1, pagerows: int 
 def get_admin_data_segment_amount(work_no=None):
     conn.ping(reconnect=True)
     cursor = conn.cursor()
-    admin = pojo.AdminPojo
+    admin = pojo.AdminPojo()
     sql = admin.get_admin_data_amount(work_no=work_no)
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -203,10 +207,13 @@ def get_admin_data_segment_amount(work_no=None):
 def insert_passage(passage: pojo.PassageAudit):
     conn.ping(reconnect=True)
     cursor = conn.cursor()
-    sql = passage.get_alldata_sql()
+    sql = passage.get_insert_sql()
     cursor.execute(sql)
     result = cursor.fetchall()
     return_data = [a for a in result]
+    conn.commit()
+    cursor.close()
+    conn.close()
     return return_data
 
 
@@ -244,6 +251,7 @@ def passage_update_audit(id, audit):
     cursor.execute(sql)
     result = cursor.fetchall()
     return_data = [a for a in result]
+    conn.commit()
     cursor.close()
     conn.close()
     return return_data

@@ -102,11 +102,11 @@
                     <table class="table table-striped table-hover" id="dataTable">
                         <thead>
                         <tr>
-                            <th>ip</th>
-                            <th>问句</th>
+                            <th>编号</th>
+                            <th>文章</th>
                             <th>审核状态</th>
-                            <th>检索时间</th>
-                            <th>修改实践</th>
+                            <th>写入时间</th>
+                            <th>修改时间</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -193,10 +193,10 @@
     function getPage(pageNo) {
         var dataRow = "";
         $.ajax({
-                url: ctx + "searchBackwardHistory",
+                url: ctx + "searchBackwardpassage",
                 type: "post",
                 data: {
-                    "username": $("#username").val(),
+                    "passage_content": $("#username").val(),
                     "pageNo": pageNo,
                     "ip": window.ipJson.ip
                 },
@@ -207,17 +207,17 @@
                         $.each(response.data.records, function (i, r) {
                             console.log(r)
                             dataRow += '<tr>'
-                                + '<td>' + r.mac_address + '</td>'
-                                + '<td>' + r.search_data + '</td>'
+                                + '<td>' + r.es_id + '</td>'
+                                + '<td>' + r.es_data + '</td>'
                                 + '<td>' + transformaudit(r.audit) + '</td>'
-                                + '<td>' + r.insert_time + '</td>'
+                                + '<td>' + r.create_time + '</td>'
                                 + '<td>' + r.update_time + '</td>'
                             ;
 
                             dataRow += '<td>'
-                                + '<a href="javascript:aduittrue(' + r.id + ')">通过</a>'
+                                + '<a href="javascript:aduittrue(' + r.id + ',\'' + r.es_id + '\')">通过</a>'
                                 + '&nbsp;&nbsp;'
-                                + '<a href="javascript:aduitfalse(' + r.id + ')" style="color: #CA0C16;">否决</a>'
+                                + '<a href="javascript:aduitfalse(' + r.id + ',\'' + r.es_id + '\')" style="color: #CA0C16;">否决</a>'
                                 + '</td>'
                                 + '</tr>';
                         });
@@ -270,15 +270,16 @@
     }
 
     //删除
-    function aduitfalse(id) {
-        if (confirm("确定否决问句？")) {
+    function aduitfalse(id, es_id) {
+        if (confirm("确定否决文本？")) {
             $.ajax({
                 type: "POST",
-                url: ctx + "searchupdate",
+                url: ctx + "passageaudit",
                 dataType: "json",
                 data: {
                     id: id,
-                    audit: -1
+                    audit: -1,
+                    es_id: es_id
                 },
                 success: function (data) {
                     getPage(1);
@@ -291,15 +292,16 @@
         }
     }
 
-    function aduittrue(id) {
+    function aduittrue(id, es_id) {
 
         $.ajax({
             type: "POST",
-            url: ctx + "searchupdate",
+            url: ctx + "passageaudit",
             dataType: "json",
             data: {
                 id: id,
-                audit: 1
+                audit: 1,
+                es_id: es_id
             },
             success: function (data) {
                 getPage(1);
