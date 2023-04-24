@@ -12,12 +12,12 @@
     <script>
 
         window.onload = function () {
-            let login = document.getElementById('login');
-            let login_username = document.getElementById('login_username');
-            let login_password = document.getElementById('login_password');
 
 
             login.onclick = function () {
+
+                let login_username = document.getElementById('login_username');
+                let login_password = document.getElementById('login_password');
                 var onclickdata = "username=" + login_username.value + "&password=" + login_password.value + ""
                 console.log(onclickdata)
                 axios.request({
@@ -26,14 +26,14 @@
                     data: onclickdata
                 }).then(res => {
                     console.log(res.data)
-                    if (res.data.startsWith( "登陆成功")) {
+                    if (res.data.startsWith("登陆成功")) {
                         $('#login-success-alert-success').addClass("show");
                         window.setTimeout(function () {
                             $("#login-success-alert-success").removeClass("show");
                         }, 1000);
-                        splitarray=res.data.split('||')
+                        splitarray = res.data.split('||')
 
-                        var url="backwardindex?id="+splitarray[1]+"&username="+splitarray[2]
+                        var url = "backwardindex?id=" + splitarray[1] + "&username=" + splitarray[2]
 
                         window.location.href = url;
                     } else {
@@ -47,6 +47,32 @@
 
                 })
             }
+            resetPwd.onclick = function () {
+                let resetusername = document.getElementById('resetusername');
+                let resetpassword = document.getElementById('resetpassword');
+                let resetcofirmpassword = document.getElementById('resetcofirmpassword');
+                let resetworkno = document.getElementById('resetworkno');
+                if (resetpassword.value != resetcofirmpassword.value) {
+                    alert("两次密码不一致")
+                    return
+                }
+                var onclickdata = "username=" + resetusername.value + "&password=" + resetpassword.value+ "&work_no=" + resetworkno.value
+                axios.request({
+                    url: "http://localhost:5000/updateadminself",
+                    method: "post",
+                    data: onclickdata
+                }).then(res => {
+                    console.log(res.data)
+                    if (res.data.status==-1) {
+                            alert("用户名已存在")
+                    } else {
+
+                    }
+
+
+                })
+            }
+
         }
     </script>
 </head>
@@ -77,7 +103,7 @@
         </center>
         <br/>
         <a id="searchPwd" data-toggle="modal" data-target="#searchPwd-window">忘记密码</a>
-        <a id="toRegister" data-toggle="modal" data-target="#register-window">立即注册</a>
+        <a id="toRegister" data-toggle="modal" onclick="alert('请联系超级管理员予以注册')">立即注册</a>
     </div>
 </div>
 <!-- 注册框 -->
@@ -109,7 +135,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="register" @click="register" class="btn btn-primary">注册</button>
+                <button type="button" id="register" class="btn btn-primary">注册</button>
             </div>
         </div>
     </div>
@@ -125,21 +151,24 @@
             </div>
             <div class="modal-body">
                 <form class="form-inline" role="form">
-                    <label>用&ensp;户&ensp;名:</label><input class="form-control" placeholder="请输入您的用户名"/>
+                    <label>用&ensp;户&ensp;名:</label><input id="resetusername" class="form-control"
+                                                             placeholder="请输入您的用户名"/>
                     <br/>
                     <br/>
-                    <label>新&ensp;密&ensp;码:</label><input class="form-control"
+                    <label>新&ensp;密&ensp;码:</label><input id="resetpassword" class="form-control"
                                                              placeholder="请设置您的新密码(不少于8位)"/>
                     <br/>
                     <br/>
-                    <label>确认密码:</label><input class="form-control" placeholder="请再次确认您的新密码"/>
+                    <label>确认密码:</label><input id="resetcofirmpassword" class="form-control"
+                                                   placeholder="请再次确认您的新密码"/>
                     <br/>
                     <br/>
-                    <label>手&ensp;机&ensp;号:</label><input class="form-control" placeholder="请输入您绑定的手机号"/>
-                    <input type="button" value="发送验证码" class="btn btn-info"/>
+                    <label>工&ensp;&ensp;&ensp;&ensp;号:</label><input  id="resetworkno" class="form-control"
+                                                                       placeholder="请输入您绑定的手机号"/>
+
                     <br/>
                     <br/>
-                    <label>验&ensp;证&ensp;码:</label><input class="form-control" placeholder="请输入短信验证码"/>
+
                 </form>
             </div>
             <div class="modal-footer">

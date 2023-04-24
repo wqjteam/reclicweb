@@ -126,7 +126,7 @@ def login_backward(admin: pojo.AdminPojo):
 def judge_admin_update_pre(admin: pojo.AdminPojo):
     conn.ping(reconnect=True)
     cursor = conn.cursor()
-    sql = admin.get_update_username_pre_sql()
+    sql = admin.get_update_admin_pre_sql()
     cursor.execute(sql)
     result = cursor.fetchall()
     return_data = [list(a) for a in result]
