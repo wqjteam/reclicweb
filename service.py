@@ -76,7 +76,7 @@ def update_history_data(id, update_time, aduit):
 def get_backward_history_data(mac_address, search_data, index, rows=10):
     amount = mysqldao.get_history_backward_amount(mac_address, search_data)
     data = mysqldao.get_history_backward_data(mac_address=mac_address, search_data=search_data, index=index, rows=rows)
-    print(data)
+
     returndict = {"data": {
         "pages": math.ceil(amount / rows),
         "records": data
@@ -110,9 +110,9 @@ def create_admin(username, password, work_no):
 def get_backward_login(data: pojo.AdminPojo):
     result = mysqldao.login_backward(data)
     if len(result) == 0:
-        return -1
+        return "-1"
     else:
-        return result[0][0]
+        return result
 
 
 def get_admin_page(work_no: str, pageindex: int = 1, pagerows: int = 10):

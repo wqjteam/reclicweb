@@ -24,9 +24,9 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
     loginData = AdminPojo(username=username, password=password)
-    id = service.get_backward_login(loginData)
-    if id >= 0:
-        return "登陆成功||" + str(id) + "||" + username
+    word_no = service.get_backward_login(loginData)
+    if word_no !="-1":
+        return "登陆成功||" + str(word_no[0][0]) + "||" + username+"||"+word_no[0][1]
     else:
         return "账号或者密码有误"
 
@@ -187,10 +187,11 @@ def tologinback():
 def backwardindex():
     username = request.args.get('username')
     id = request.args.get('id')
+    workno = request.args.get('workno')
     if username is None or id is None:
         return render_template('backwardlogin.html')
     else:
-        return render_template('backwardindex.html', username=username, id=id)
+        return render_template('backwardindex.html', username=username, id=id,workno=workno)
 
 
 @app.route('/aduithistory', methods=['GET', 'POST'])

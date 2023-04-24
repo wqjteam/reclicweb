@@ -99,7 +99,7 @@ class AdminPojo():
         return insertsql
 
     def get_update_admin_pre_sql(self):
-        update_admin_pre_sql = "select id from relic_data.admin where username='%s' or work_no!='%s' " % (
+        update_admin_pre_sql = "select id from relic_data.admin where username='%s' and work_no!='%s' " % (
             self.username, self.work_no)
         return update_admin_pre_sql
 
@@ -122,7 +122,7 @@ class AdminPojo():
         return update_password_sql
 
     def get_login_sql(self):
-        login_sql = "select id from  relic_data.admin where username='%s' and password='%s'" % (
+        login_sql = "select id,work_no  from  relic_data.admin where username='%s' and password='%s'" % (
             self.username, self.password)
         return login_sql
 
