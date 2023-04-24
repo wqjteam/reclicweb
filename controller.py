@@ -4,13 +4,115 @@ import click
 from flask import Flask, render_template, request
 from flask_cors import *
 
+import pojo
 import service
 from pojo import SearchHistoryPojo, AdminPojo
 
 app = Flask(__name__)
 
-
 # the minimal Flask application
+
+
+"""
+用户相关
+"""
+
+
+@app.route('/login', methods=['GET', 'POST'])
+@cross_origin()
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    loginData = AdminPojo(username=username, password=password)
+    id = service.get_backward_login(loginData)
+    if id >= 0:
+        return "登陆成功||" + str(id) + "||" + username
+    else:
+        return "账号或者密码有误"
+
+
+@app.route('/updateadminself', methods=['GET', 'POST'])
+@cross_origin()
+def updateadminself():
+    id = request.form.get('id')
+    work_no = request.form.get('work_no')
+    password = request.form.get('password')
+    username = request.form.get('username')
+
+    return service.update_admin_self(id=id, username=username, password=password, work_no=work_no)
+
+
+@app.route('/adminpage', methods=['GET', 'POST'])
+@cross_origin()
+def adminpage():
+    work_no = request.form.get('work_no')
+    pageindex = request.form.get('pageindex')
+
+    return service.get_admin_page(work_no, pageindex)
+
+
+@app.route('/adminresetpassword', methods=['GET', 'POST'])
+@cross_origin()
+def adminresetpassword():
+    id = request.form.get('id')
+    password = request.form.get('password')
+    return service.update_admin_password(id=0)
+
+
+@app.route('/adminaudit', methods=['GET', 'POST'])
+@cross_origin()
+def adminaudit():
+    id = request.form.get('id')
+    status = request.form.get('status')
+    return service.admin_audit(id=id, audit=status)
+
+
+@app.route('/createadmin', methods=['GET', 'POST'])
+@cross_origin()
+def createadmin():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    work_no = request.form.get('work_no')
+
+    return service.create_admin(username, password, work_no)
+
+
+"""
+文章相关
+"""
+
+
+@app.route('/searchBackwardpassage', methods=['GET', 'POST'])
+@cross_origin()
+def searchBackwardpassage():
+    search_data = request.form.get('username')
+    pageNo = request.form.get('pageNo')
+
+    data = service.get_passage_audit_page(blurcontent=search_data, index=pageNo)
+    return data
+
+
+@app.route('/passageaudit', methods=['GET', 'POST'])
+@cross_origin()
+def passageaudit():
+    if request.method == 'POST':
+
+        id = request.form.get('id')
+        es_id = request.form.get('es_id')
+        audit = request.form.get('audit')
+        create_time = request.form.get('create_time')
+        update_time = request.form.get('update_time')
+        insert_data = pojo.PassageAudit(id=id, es_id=es_id, audit=audit, create_time=create_time,
+                                        update_time=update_time)
+        returnjson = service.insert_update_audit_passage(insert_data)
+        return returnjson
+    else:
+        return '不存在答案'
+
+
+"""
+搜索记录相关
+"""
 
 
 @app.route('/getAnswer', methods=['GET', 'POST'])
@@ -40,19 +142,6 @@ def getFronthistory():
         return '不存在答案'
 
 
-@app.route('/login', methods=['GET', 'POST'])
-@cross_origin()
-def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    loginData = AdminPojo(username=username, password=password)
-    id = service.get_backward_login(loginData)
-    if id >= 0:
-        return "登陆成功||" + str(id) + "||" + username
-    else:
-        return "账号或者密码有误"
-
-
 @app.route('/searchBackwardHistory', methods=['GET', 'POST'])
 @cross_origin()
 def searchBackwardHistory():
@@ -73,6 +162,11 @@ def searchupdate():
 
     data = service.update_history_data(id, now, audit)
     return data
+
+
+"""
+界面跳转
+"""
 
 
 @app.route('/')

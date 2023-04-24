@@ -90,8 +90,8 @@
                         </a>
                     </li>
 
-                    <li id="renyaunli" class="nav-item " hidden>
-                        <a  class="nav-link  menua " hidden
+                    <li id="renyaunli" class="nav-item " >
+                        <a  class="nav-link  menua "
                            href='peoplemanage?id={{ id }}&username=+{{ username }}' target="mainFrame">
                             <span data-feather="home"></span>
                             人员管理
@@ -120,12 +120,11 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
 <script>
     window.onload = function () {
-        var flaskid =
-        {{ id }}
+        var flaskid = {{ id }};
         if (flaskid == 1) {
             console.log("-----------------运行到这------------")
             console.log($("#renyaunli"))
-            $("#renyaunli").toggle();
+            $("#renyaunli").addClass('hidden')
 
         }
 

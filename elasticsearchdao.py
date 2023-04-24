@@ -54,3 +54,39 @@ def get_search_result(ner_result_arr):
         }
     }
     return es.search(index="culture_heritage", body=match_body)
+
+
+def get_search_result_page(blurcontent: str, pageindex: int=0, pagerows: int=10):
+    match_sentence = "info"
+
+    match_body = {
+        "from": (pageindex - 1) * pagerows,
+        "size": pagerows,
+        "query": {
+
+        }
+    }
+    #进行模糊查询判断
+    if blurcontent is None or blurcontent == "":
+        match_body["query"] = {"match_all": {}}
+    else:
+        match_body["query"] = {"match": {"info": blurcontent}}
+
+    return es.search(index="culture_heritage", body=match_body)
+
+def get_search_result_amount(blurcontent: str):
+    match_sentence = "info"
+
+    match_body = {
+
+        "query": {
+
+        }
+    }
+    #进行模糊查询判断
+    if blurcontent is None or blurcontent == "":
+        match_body["query"] = {"match_all": {}}
+    else:
+        match_body["query"] = {"match": {"info": blurcontent}}
+
+    return es.count(index="culture_heritage", body=match_body)
