@@ -76,6 +76,24 @@
             cursor: pointer;
         }
     </style>
+    <style>
+        .box {
+            position: relative;
+        }
+
+        .box:hover:after {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            content: attr(data-title);
+            color: #ff0026;
+            border: 1px solid #000;
+            border-radius: 5px;
+            background-color: #f5f1f1;
+        }
+    </style>
+
+
 </head>
 <body>
 <div class="container">
@@ -205,10 +223,19 @@
                     dataRow = "";
                     if (response.data.records.length > 0) {
                         $.each(response.data.records, function (i, r) {
-
+                            var inflate_es_id = r.es_id;
+                            var inflate_es_data = r.es_data;
+                            if (r.es_id.length > 3) {
+                                inflate_es_id = r.es_id.substring(0, 4) + '***';
+                            }
+                            ;
+                            if (r.es_data.length > 5) {
+                                inflate_es_data = r.es_data.substring(0, 6) + '***';
+                            }
+                            ;
                             dataRow += '<tr>'
-                                + '<td>' + r.es_id + '</td>'
-                                + '<td>' + r.es_data + '</td>'
+                                + '<td><div class="box" data-title="' + r.es_id + '">' + inflate_es_id + '</div></td>'
+                                + '<td><div class="box" data-title="' + r.es_data + '">' + inflate_es_data + '</div></td>'
                                 + '<td>' + transformaudit(r.audit) + '</td>'
                                 + '<td>' + r.create_time + '</td>'
                                 + '<td>' + r.update_time + '</td>'
