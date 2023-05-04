@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>管理后台</title>
+    <title>管理后台主页</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
 
     <style type="text/css">
@@ -76,7 +76,7 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="sidebar-sticky pt-3">
                 <ul class="nav flex-column">
-                    <li class="nav-item active">
+                    <li id="wenbenli" class="nav-item active">
                         <a id="wenbena" class="nav-link menua" href='aduitpassage?id={{ id }}&username={{ username }}'
                            target="mainFrame">
                             <span data-feather="home"></span>
@@ -85,7 +85,7 @@
                     </li>
 
 
-                    <li class="nav-item">
+                    <li id="jiluli" class="nav-item">
                         <a id="jilua" class="nav-link  menua" href='aduithistory?id={{ id }}&username={{ username }}'
                            target="mainFrame">
                             <span data-feather="home"></span>
@@ -137,18 +137,18 @@
                 <div class="form-group">
                     <label class="control-label" for="resetcofirmpassword">确认密码:</label>
                     <input id="resetcofirmpassword" class="form-control"
-                                                   placeholder="请再次确认您的新密码"/>
+                           placeholder="请再次确认您的新密码"/>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="resetworkno">工号：</label>
                     <input id="resetworkno" class="form-control" disabled
-                                                                       value="{{ workno }}"/>
+                           value="{{ workno }}"/>
                 </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button id="resetPwd" type="button" class="btn btn-primary" >提交</button>
+                <button id="resetPwd" type="button" class="btn btn-primary">提交</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -172,6 +172,11 @@
         if (flaskid != 1) {
 
             $("#renyaunli").hide()
+
+        } else {
+            $("#wenbenli").hide()
+            $("#jiluli").hide()
+            $("#mainFrame").attr('src', 'peoplemanage?id={{ id }}&username=+{{ username }}');
 
         }
 

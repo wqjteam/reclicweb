@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>search index</title>
+    <title>问答系统主页</title>
     <!-- 新 Bootstrap 核心 CSS 文件 -->
     <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
@@ -107,7 +107,7 @@
                     console.log(data)
                     suggBox.style.display = 'none';
                     result.innerHTML = data
-                    result.hidden=false
+                    result.hidden = false
                     // query.value = ''
                 })
             }
@@ -326,11 +326,13 @@
     </style>
 </head>
 <body>
-    <ul style="position:absolute;top:20px;right:20px">
-        <li>
-            <button class="btn btn-success pull-right"><a href="{{ url_for('tologinback') }}">后台管理</a></button>
-        </li>
-    </ul>
+<ul style="position:absolute;top:20px;right:20px">
+    <li>
+        <button class="btn btn-success pull-right"><a href="{{ url_for('tologinback') }}">
+            <font color="#000000">后台管理</font>
+        </a></button>
+    </li>
+</ul>
 <div class="searchBody">
 
     <div class="logo">基于机器阅读理解的文化遗产问答系统</div>
