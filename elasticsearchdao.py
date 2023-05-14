@@ -53,8 +53,27 @@ def get_search_result(ner_result_arr):
             }
         }
     }
-    return es.search(index="culture_heritage", body=match_body)
+    result=es.search(index="culture_heritage", body=match_body)
+    return result
 
+
+def get_search_result_test(ner_result_arr):
+    match_sentence = "info"
+
+    match_body = {
+        "query": {
+
+            "match": {
+
+                match_sentence: ner_result_arr
+
+            }
+
+        }
+        , "explain": True
+    }
+    result=es.search(index="culture_heritage", body=match_body)
+    return result
 
 def get_search_result_page(blurcontent: str, pageindex: int=0, pagerows: int=10):
     match_sentence = "info"
@@ -90,3 +109,6 @@ def get_search_result_amount(blurcontent: str):
         match_body["query"] = {"match": {"info": blurcontent}}
 
     return es.count(index="culture_heritage", body=match_body)
+
+
+print(get_search_result_test("北京博物馆"))
