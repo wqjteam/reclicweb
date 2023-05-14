@@ -12,7 +12,7 @@ model_name = 'bert-base-chinese'
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-path = "./model_path/qa_path/ultimate_dict_nsp_qa_lstm_epoch_1000"
+path = "./model_path/qa_path/ultimate_dict_nsp_qa_lstm_union_epoch_1000"
 
 '''
 问答部分
